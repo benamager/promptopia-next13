@@ -1,34 +1,134 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Project introduction
 
-## Getting Started
+This is a NextJS tutorial from <u>JavaScript Mastery</u>. The following is my notes I wrote while doing it.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+
+## Nice to understand
+
+Performs either SSR or CSR depending on needs.
+
+### Client-side rendering
+
+User requests the webpage, server sends HTML with JavaScript and client downloads and renders the components and display website. SEO optimization is bad as crawlers cant execute JavsScript.
+
+### Server-side rendering
+
+Rendering the webpage on server before transmitting to client. Instead of letting client render it, it does that server side. **Immediately display** which is SEO efficient. Easy crawling and indexing.
+
+### Why seo?
+
+Crucial for optimizing website's visibility and ranking in search engine results. More organic traffic, better user experience, trustworthiness competetitive advantage.
+
+
+
+## Routing
+
+File-based routing system, which is handled by file system.
+
+- app
+  - blog `/blog`
+  - about `https://localhost:3000/about`
+  - profile `/profile`
+
+
+
+## Full-stack
+
+From Next.js version 9 they introduced <u>API Routes</u>. Serverless API's allows us to build and deploy APIs without managing server infrastructure and scaling as traffic increases.
+
+### Two methods of making API routes
+
+### Method 1 (inside app directory)
+
+Define `route.js` Inside the app directory like shown. But you cannot have both a `page.js` and a `route.js` in same folder. This will make code harder to understand.
+
+- app
+
+  - blog `/blog`
+- about `https://localhost:3000/about`
+  - **profile** `/profile`
+  - **route.js**
+
+### Method 2 (Inside api folder)
+
+This seperates the backend and frontend logic. And is easier to maintain.
+
+- app
+
+  - **api**
+    - **users**
+      - **route.js**
+
+  - profile `/profile`
+    - page.js
+
+### Inside the route.js
+
+```javascript
+export async function GET(request) {
+	return new Response('Hello, Next.js!')
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+As you can see in the codeblock we define export a function which handles the GET request. Same with other requests such as `HEAD, POST, PUT, DELETE, PATCH` can be exported from the `route.js` file.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Automatic code splitting
 
-To learn more about Next.js, take a look at the following resources:
+Code splitting breaks down large bundles of JavaScript into smaller, more manageable chunks that can be <u>loaded as needed</u>. Don't need original React diffucult code splitting.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Data fetching
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Three options when fetching data in Next
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Server Side Rendering (SSR)
+
+Dynamic server rendered data. Fetched fresh on each request. Encuring always up-to-date content. This would be if we had some params and no-cache on fetch request.
+
+### Static Site Generation (SSG)
+
+This is default in Next. This will automatically cache content. Ideal for content which doesn't change often e.g. blog posts.
+
+### Incremental Static Generation (ISR)
+
+Combing SSR and SSG by being able to revalidate cached requests. We can define this ourself.
+
+
+
+## SEO
+
+Next has two kinds of metadata:
+
+### Static Metadata
+
+```javascript
+export const metadata = {
+	title: 'Home',
+}
+
+export default function Page() {
+	return (
+		<h1>Normal Next.js page with static metadata</h1>
+	)
+}
+```
+
+### Dynamic Metadata
+
+```javascript
+export async function generateMetadata({ params, searchParams }) {
+	const product = await getProduct(params.id)
+  return { title: product.title }
+}
+
+export default function Page() {
+	return (
+		<h1>Normal Next.js page with static metadata</h1>
+	)
+}
+```
+
