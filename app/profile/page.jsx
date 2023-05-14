@@ -21,7 +21,7 @@ export default function MyProfile() {
       const data = await response.json()
       setPosts(data)
     })();
-  }, [])
+  }, [session?.user.id])
 
   function handleEdit() {
 
