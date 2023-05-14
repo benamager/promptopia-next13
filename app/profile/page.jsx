@@ -8,6 +8,7 @@ import Profile from "@/components/Profile"
 
 export default function MyProfile() {
   const { data: session } = useSession()
+  const router = useRouter()
 
   const [posts, setPosts] = useState([])
 
@@ -23,8 +24,8 @@ export default function MyProfile() {
     })();
   }, [session?.user.id])
 
-  function handleEdit() {
-
+  function handleEdit(post) {
+    router.push(`/update-prompt?id=${post._id}`)
   }
 
   async function handleDelete() {
