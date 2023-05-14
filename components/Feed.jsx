@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PromptCard from './PromptCard';
 
+// nested component only used in this component (Feed)
 function PromptCardList({ data, handleTagClick }) {
   return (
     <div className="mt-16 prompt_layout">
@@ -20,10 +21,26 @@ function PromptCardList({ data, handleTagClick }) {
 export default function Feed() {
   const [searchText, setSearchText] = useState('')
   const [posts, setPosts] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([])
 
-  function handleSearchChange(e) {
-    e.preventDefault()
-  }
+  // When searchText changes, filter posts by searchText into filteredPosts state
+  useEffect(() => {
+    // If search text is empty, set empty array and return
+    if (searchText === '') {
+      setFilteredPosts([])
+      return
+    }
+
+    // Filter posts by searchText and set filteredPosts
+    const searchTextToLower = searchText.toLowerCase()
+    const filteredPostsArray = posts.filter(post =>
+      post.prompt.toLowerCase().includes(searchTextToLower)
+      || post.tag.toLowerCase() == searchTextToLower
+      || post.creator.username.toLowerCase() == searchTextToLower)
+
+    setFilteredPosts(filteredPostsArray)
+
+  }, [searchText, posts])
 
   // Fetch posts on page load
   useEffect(() => {
@@ -41,13 +58,13 @@ export default function Feed() {
           type="text"
           placeholder="Search for a tag or a username"
           value={searchText}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchText(e.target.value)}
           required
           className="search_input peer"
         />
       </form>
       <PromptCardList
-        data={posts}
+        data={searchText ? filteredPosts : posts}
         handleTagClick={() => { }}
       />
     </section>
