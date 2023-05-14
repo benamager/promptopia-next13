@@ -6,14 +6,15 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react"
 
 export default function Nav() {
-  const isUserLoggedIn = true; // TODO: replace with actual login status
+  const { data: session } = useSession()
 
   const [providers, setProviders] = useState(null)
   const [toggleDropdown, setToggleDropdown] = useState(false)
 
   useEffect(() => {
     (async () => {
-      setProviders(await getProviders())
+      const res = await getProviders();
+      setProviders(res);
     })();
   }, [])
 
@@ -30,7 +31,7 @@ export default function Nav() {
       </Link>
       {/* Desktop  navigation*/}
       <div className="sm:flex hidden">
-        {isUserLoggedIn ?
+        {session?.user ?
           (
             <div className="flex gap-3 md:gap-5">
               <Link
@@ -48,7 +49,7 @@ export default function Nav() {
               </button>
               <Link href="/profile">
                 <Image
-                  src="/assets/images/logo.svg"
+                  src={session?.user.image}
                   width={37}
                   height={37}
                   className="rounded-full"
@@ -74,10 +75,10 @@ export default function Nav() {
       </div>
       {/* Mobile navigation */}
       <div className="sm:hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               width={37}
               height={37}
               className="rounded-full"
