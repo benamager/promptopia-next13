@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 import PromptCard from './PromptCard';
 
 // nested component only used in this component (Feed)
-function PromptCardList({ data, handleTagClick }) {
+function PromptCardList({ data, setSearchText }) {
   return (
     <div className="mt-16 prompt_layout">
       {data.map((post) => (
         <PromptCard
           key={post._id}
           post={post}
-          handleTagClick={handleTagClick}
+          handleTagClick={() => setSearchText(post.tag)}
         />
       ))}
     </div>
@@ -65,7 +65,7 @@ export default function Feed() {
       </form>
       <PromptCardList
         data={searchText ? filteredPosts : posts}
-        handleTagClick={() => { }}
+        setSearchText={setSearchText}
       />
     </section>
   );
